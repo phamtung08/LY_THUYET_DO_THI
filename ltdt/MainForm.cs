@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -15,6 +14,13 @@ namespace DijkstraFlightFinder
         private Dictionary<string, int> distances;
         private Dictionary<string, string> previous;
         private HashSet<string> visited;
+
+        private Dictionary<string, int> sccId;
+        private int sccCount;
+        private int indexCounter;
+        private Dictionary<string, int> indexMap;
+        private Dictionary<string, int> lowLink;
+        private Stack<string> stackScc;
 
         public MainForm()
         {
@@ -35,44 +41,44 @@ namespace DijkstraFlightFinder
                 },
                 ["London"] = new Dictionary<string, int>
                 {
-                    ["New York"] = 350,
+                    ["New York"] = 360,
                     ["Paris"] = 100,
                     ["Dubai"] = 450,
                     ["Singapore"] = 700
                 },
                 ["Paris"] = new Dictionary<string, int>
                 {
-                    ["New York"] = 400,
-                    ["London"] = 100,
+                    ["New York"] = 420,
+                    ["London"] = 105,
                     ["Dubai"] = 380,
                     ["Sydney"] = 950
                 },
                 ["Tokyo"] = new Dictionary<string, int>
                 {
-                    ["New York"] = 1100,
+                    ["New York"] = 1080,
                     ["Singapore"] = 550,
                     ["Sydney"] = 600
                 },
                 ["Dubai"] = new Dictionary<string, int>
                 {
-                    ["London"] = 450,
-                    ["Paris"] = 380,
+                    ["London"] = 470,
+                    ["Paris"] = 400,
                     ["Singapore"] = 420,
                     ["Sydney"] = 800
                 },
                 ["Singapore"] = new Dictionary<string, int>
                 {
-                    ["London"] = 700,
-                    ["Tokyo"] = 550,
-                    ["Dubai"] = 420,
+                    ["London"] = 720,
+                    ["Tokyo"] = 590,
+                    ["Dubai"] = 430,
                     ["Sydney"] = 480
                 },
                 ["Sydney"] = new Dictionary<string, int>
                 {
-                    ["Paris"] = 950,
-                    ["Tokyo"] = 600,
-                    ["Dubai"] = 800,
-                    ["Singapore"] = 480
+                    ["Paris"] = 960,
+                    ["Tokyo"] = 650,
+                    ["Dubai"] = 820,
+                    ["Singapore"] = 500
                 }
             };
 
@@ -80,19 +86,22 @@ namespace DijkstraFlightFinder
             cboEnd.Items.AddRange(graph.Keys.ToArray());
             cboStart.SelectedIndex = 0;
             cboEnd.SelectedIndex = 1;
+
+            FindSCCs();
         }
+
 
         private void InitializeCityPositions()
         {
             cityPositions = new Dictionary<string, Point>
             {
-                ["New York"] = new Point(180, 170),      
-                ["London"] = new Point(370, 140),        
-                ["Paris"] = new Point(385, 155),        
-                ["Tokyo"] = new Point(640, 165),         
-                ["Dubai"] = new Point(450, 210),         
-                ["Singapore"] = new Point(550, 280),    
-                ["Sydney"] = new Point(640, 360)         
+                ["New York"] = new Point(180, 170),
+                ["London"] = new Point(370, 140),
+                ["Paris"] = new Point(385, 155),
+                ["Tokyo"] = new Point(640, 165),
+                ["Dubai"] = new Point(450, 210),
+                ["Singapore"] = new Point(550, 280),
+                ["Sydney"] = new Point(640, 360)
             };
         }
 
@@ -120,7 +129,7 @@ namespace DijkstraFlightFinder
                 string path = string.Join(" → ", shortestPath);
                 int totalCost = distances[end];
                 lblResult.Text = $"Đường bay rẻ nhất: {path}\n" +
-                               $"Tổng chi phí: ${totalCost}";
+                                 $"Tổng chi phí: ${totalCost}";
             }
             else
             {
@@ -135,7 +144,7 @@ namespace DijkstraFlightFinder
             int midX = (p1.X + p2.X) / 2;
             int midY = (p1.Y + p2.Y) / 2;
 
-            double distance = Math.Sqrt(Math.Pow(p2.X - p1.X, 2) + Math.Pow(p2.Y - p1.Y, 2));
+            double distance = Math.Sqrt((p2.X - p1.X) * (p2.X - p1.X) + (p2.Y - p1.Y) * (p2.Y - p1.Y));
             int curveOffset = (int)(distance * 0.15);
 
             double dx = p2.X - p1.X;
@@ -149,27 +158,29 @@ namespace DijkstraFlightFinder
 
             g.DrawBezier(pen, p1, controlPoint, controlPoint, p2);
 
-            DrawArrowHead(g, pen.Brush, controlPoint, p2);
+            DrawArrowHead(g, pen, controlPoint, p2);
         }
 
-        private void DrawArrowHead(Graphics g, Brush brush, Point from, Point to)
+        private void DrawArrowHead(Graphics g, Pen pen, Point from, Point to)
         {
+            int arrowSize = 12;
+
             double angle = Math.Atan2(to.Y - from.Y, to.X - from.X);
-            double arrowLength = 8;
-            double arrowAngle = Math.PI / 6;
 
-            Point arrowPoint1 = new Point(
-                (int)(to.X - arrowLength * Math.Cos(angle - arrowAngle)),
-                (int)(to.Y - arrowLength * Math.Sin(angle - arrowAngle))
+            Point p1 = new Point(
+                (int)(to.X - arrowSize * Math.Cos(angle - Math.PI / 6)),
+                (int)(to.Y - arrowSize * Math.Sin(angle - Math.PI / 6))
             );
 
-            Point arrowPoint2 = new Point(
-                (int)(to.X - arrowLength * Math.Cos(angle + arrowAngle)),
-                (int)(to.Y - arrowLength * Math.Sin(angle + arrowAngle))
+            Point p2 = new Point(
+                (int)(to.X - arrowSize * Math.Cos(angle + Math.PI / 6)),
+                (int)(to.Y - arrowSize * Math.Sin(angle + Math.PI / 6))
             );
 
-            g.FillPolygon(brush, new Point[] { to, arrowPoint1, arrowPoint2 });
+            g.DrawLine(pen, to, p1);
+            g.DrawLine(pen, to, p2);
         }
+
 
         private void Dijkstra(string start, string end)
         {
@@ -265,10 +276,16 @@ namespace DijkstraFlightFinder
             Graphics g = e.Graphics;
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
-            // Vẽ nền bản đồ thế giới
             DrawWorldMap(g);
 
-            // Vẽ các cạnh (đường bay)
+            Color[] sccColors = {
+                Color.FromArgb(255, 220, 200),
+                Color.FromArgb(220, 255, 220),
+                Color.FromArgb(220, 220, 255),
+                Color.FromArgb(255, 240, 180),
+                Color.FromArgb(230, 200, 255)
+            };
+
             foreach (var city in graph)
             {
                 Point p1 = cityPositions[city.Key];
@@ -282,26 +299,31 @@ namespace DijkstraFlightFinder
                                    Math.Abs(shortestPath.IndexOf(city.Key) -
                                            shortestPath.IndexOf(neighbor.Key)) == 1;
 
-                    // Vẽ đường bay 
                     if (isInPath)
                     {
-                        Pen flightPen = new Pen(Color.FromArgb(255, 0, 0), 3);
-                        flightPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
-                        DrawCurvedLine(g, flightPen, p1, p2);
+                        using (Pen flightPen = new Pen(Color.FromArgb(255, 0, 0), 3))
+                        {
+                            flightPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
+                            DrawCurvedLine(g, flightPen, p1, p2);
+                        }
                     }
                     else
                     {
-                        Pen flightPen = new Pen(Color.FromArgb(100, 128, 128, 128), 2);
-                        flightPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
-                        DrawCurvedLine(g, flightPen, p1, p2);
+                        using (Pen flightPen = new Pen(Color.FromArgb(100, 128, 128, 128), 2))
+                        {
+                            flightPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
+                            DrawCurvedLine(g, flightPen, p1, p2);
+                        }
                     }
 
                     int midX = (p1.X + p2.X) / 2;
-                    int midY = (p1.Y + p2.Y) / 2 - 20; 
+                    int midY = (p1.Y + p2.Y) / 2 - 20;
                     g.FillEllipse(isInPath ? Brushes.Yellow : Brushes.White,
                         midX - 18, midY - 10, 36, 20);
-                    g.DrawEllipse(new Pen(isInPath ? Color.Red : Color.Gray, 1),
-                        midX - 18, midY - 10, 36, 20);
+                    using (Pen pen = new Pen(isInPath ? Color.Red : Color.Gray, 1))
+                    {
+                        g.DrawEllipse(pen, midX - 18, midY - 10, 36, 20);
+                    }
 
                     g.DrawString($"${neighbor.Value}",
                         new Font("Arial", 7, FontStyle.Bold),
@@ -316,37 +338,54 @@ namespace DijkstraFlightFinder
                 bool isVisited = visited != null && visited.Contains(city.Key);
                 bool isInPath = shortestPath != null && shortestPath.Contains(city.Key);
 
+                if (sccId != null && sccId.ContainsKey(city.Key))
+                {
+                    int scc = sccId[city.Key];
+                    Color sccColor = sccColors[scc % sccColors.Length];
+                    using (SolidBrush sccBrush = new SolidBrush(Color.FromArgb(140, sccColor)))
+                    {
+                        g.FillEllipse(sccBrush, p.X - 20, p.Y - 25, 40, 40);
+                    }
+                }
+
                 if (isInPath)
                 {
-                    g.FillEllipse(new SolidBrush(Color.FromArgb(80, 255, 0, 0)),
-                        p.X - 35, p.Y - 35, 70, 70);
+                    using (SolidBrush brush = new SolidBrush(Color.FromArgb(100, 255, 0, 0)))
+                    {
+                        g.FillEllipse(brush, p.X - 15, p.Y - 20, 30, 30);
+                    }
                 }
+
+                int radius = 5;
 
                 Color cityColor = isInPath ? Color.FromArgb(255, 69, 0) :
                                  isVisited ? Color.FromArgb(50, 205, 50) :
                                  Color.FromArgb(255, 215, 0);
 
-                g.FillEllipse(new SolidBrush(cityColor), p.X - 20, p.Y - 35, 40, 40);
-                g.FillPolygon(new SolidBrush(cityColor), new Point[] {
-                    new Point(p.X - 10, p.Y - 5),
-                    new Point(p.X + 10, p.Y - 5),
-                    new Point(p.X, p.Y + 10)
-                });
+                using (SolidBrush cityBrush = new SolidBrush(cityColor))
+                {
+                    g.FillEllipse(cityBrush, p.X - radius, p.Y - radius, radius * 2, radius * 2);
+                }
 
-                g.DrawEllipse(new Pen(Color.White, 3), p.X - 20, p.Y - 35, 40, 40);
-                g.DrawEllipse(new Pen(Color.Black, 2), p.X - 20, p.Y - 35, 40, 40);
-
-                g.FillEllipse(Brushes.White, p.X - 8, p.Y - 23, 16, 16);
-                g.DrawString("✈", new Font("Arial", 10), Brushes.Black, p.X - 7, p.Y - 25);
+                using (Pen whitePen = new Pen(Color.White, 2))
+                using (Pen blackPen = new Pen(Color.Black, 1))
+                {
+                    g.DrawEllipse(whitePen, p.X - radius, p.Y - radius, radius * 2, radius * 2);
+                    g.DrawEllipse(blackPen, p.X - radius, p.Y - radius, radius * 2, radius * 2);
+                }
 
                 SizeF textSize = g.MeasureString(city.Key, new Font("Arial", 9, FontStyle.Bold));
-                g.FillRectangle(new SolidBrush(Color.FromArgb(200, 255, 255, 255)),
-                    p.X - textSize.Width / 2 - 3, p.Y + 15, textSize.Width + 6, textSize.Height + 2);
-                g.DrawRectangle(new Pen(Color.Black, 1),
-                    p.X - textSize.Width / 2 - 3, p.Y + 15, textSize.Width + 6, textSize.Height + 2);
+                using (SolidBrush labelBg = new SolidBrush(Color.FromArgb(200, 255, 255, 255)))
+                using (Pen labelPen = new Pen(Color.Black, 1))
+                {
+                    g.FillRectangle(labelBg,
+                        p.X - textSize.Width / 2 - 3, p.Y + 8, textSize.Width + 6, textSize.Height + 2);
+                    g.DrawRectangle(labelPen,
+                        p.X - textSize.Width / 2 - 3, p.Y + 8, textSize.Width + 6, textSize.Height + 2);
+                }
 
                 g.DrawString(city.Key, new Font("Arial", 9, FontStyle.Bold),
-                    Brushes.Black, p.X - textSize.Width / 2, p.Y + 16);
+                    Brushes.Black, p.X - textSize.Width / 2, p.Y + 9);
 
                 if (distances != null && distances.ContainsKey(city.Key))
                 {
@@ -354,13 +393,15 @@ namespace DijkstraFlightFinder
                         "∞" : $"${distances[city.Key]}";
                     SizeF costSize = g.MeasureString(distText, new Font("Arial", 10, FontStyle.Bold));
 
-                    g.FillEllipse(new SolidBrush(Color.FromArgb(220, 255, 255, 0)),
-                        p.X - 22, p.Y + 32, 44, 20);
-                    g.DrawEllipse(new Pen(Color.DarkBlue, 2),
-                        p.X - 22, p.Y + 32, 44, 20);
+                    using (SolidBrush costBg = new SolidBrush(Color.FromArgb(220, 255, 255, 0)))
+                    using (Pen costPen = new Pen(Color.DarkBlue, 2))
+                    {
+                        g.FillEllipse(costBg, p.X - 16, p.Y + 24, 32, 16);
+                        g.DrawEllipse(costPen, p.X - 16, p.Y + 24, 32, 16);
+                    }
 
                     g.DrawString(distText, new Font("Arial", 10, FontStyle.Bold),
-                        Brushes.DarkBlue, p.X - costSize.Width / 2, p.Y + 34);
+                        Brushes.DarkBlue, p.X - costSize.Width / 2, p.Y + 26);
                 }
             }
         }
@@ -370,8 +411,8 @@ namespace DijkstraFlightFinder
             System.Drawing.Drawing2D.LinearGradientBrush oceanBrush =
                 new System.Drawing.Drawing2D.LinearGradientBrush(
                     new Rectangle(0, 0, pnlGraph.Width, pnlGraph.Height),
-                    Color.FromArgb(173, 216, 230),  
-                    Color.FromArgb(135, 206, 235), 
+                    Color.FromArgb(173, 216, 230),
+                    Color.FromArgb(135, 206, 235),
                     45F);
             g.FillRectangle(oceanBrush, 0, 0, pnlGraph.Width, pnlGraph.Height);
 
@@ -462,7 +503,53 @@ namespace DijkstraFlightFinder
             g.DrawString("PACIFIC", oceanFont, oceanTextBrush, 680, 250);
             g.DrawString("INDIAN", oceanFont, oceanTextBrush, 500, 350);
         }
+
+
+        private void FindSCCs()
+        {
+            sccId = new Dictionary<string, int>();
+            indexMap = new Dictionary<string, int>();
+            lowLink = new Dictionary<string, int>();
+            stackScc = new Stack<string>();
+            sccCount = 0;
+            indexCounter = 0;
+
+            foreach (var node in graph.Keys)
+            {
+                if (!indexMap.ContainsKey(node))
+                    Tarjan(node);
+            }
+        }
+
+        private void Tarjan(string u)
+        {
+            indexMap[u] = lowLink[u] = indexCounter++;
+            stackScc.Push(u);
+
+            foreach (var v in graph[u].Keys)
+            {
+                if (!indexMap.ContainsKey(v))
+                {
+                    Tarjan(v);
+                    lowLink[u] = Math.Min(lowLink[u], lowLink[v]);
+                }
+                else if (!sccId.ContainsKey(v))
+                {
+                    lowLink[u] = Math.Min(lowLink[u], indexMap[v]);
+                }
+            }
+
+            if (lowLink[u] == indexMap[u])
+            {
+                string v;
+                do
+                {
+                    v = stackScc.Pop();
+                    sccId[v] = sccCount;
+                } while (v != u);
+
+                sccCount++;
+            }
+        }
     }
 }
-
-
