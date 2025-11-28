@@ -549,6 +549,7 @@ namespace DijkstraFlightFinder
                 } while (v != u);
 
                 sccCount++;
+                // dem
             }
         }
     }
