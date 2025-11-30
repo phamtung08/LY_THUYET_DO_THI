@@ -36,8 +36,8 @@ namespace DijkstraFlightFinder
                 ["New York"] = new Dictionary<string, int>
                 {
                     ["London"] = 350,
-                    ["Paris"] = 400,
-                    ["Tokyo"] = 1100
+                    ["Paris"] = 480,
+                    ["Tokyo"] = 1500
                 },
                 ["London"] = new Dictionary<string, int>
                 {
@@ -55,7 +55,7 @@ namespace DijkstraFlightFinder
                 },
                 ["Tokyo"] = new Dictionary<string, int>
                 {
-                    ["New York"] = 1080,
+       
                     ["Singapore"] = 550,
                     ["Sydney"] = 600
                 },
@@ -69,7 +69,7 @@ namespace DijkstraFlightFinder
                 ["Singapore"] = new Dictionary<string, int>
                 {
                     ["London"] = 720,
-                    ["Tokyo"] = 590,
+                    ["Tokyo"] = 350,
                     ["Dubai"] = 430,
                     ["Sydney"] = 480
                 },
@@ -549,8 +549,8 @@ namespace DijkstraFlightFinder
                 } while (v != u);
 
                 sccCount++;
-                // dem
             }
         }
     }
 }
+//UPDATE
