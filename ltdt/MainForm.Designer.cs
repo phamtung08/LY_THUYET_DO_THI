@@ -31,138 +31,151 @@ namespace DijkstraFlightFinder
 
         private void InitializeComponent()
         {
-            this.cboStart = new ComboBox();
-            this.cboEnd = new ComboBox();
-            this.btnFind = new Button();
-            this.btnReset = new Button();
-            this.lstSteps = new ListBox();
-            this.lblResult = new Label();
-            this.pnlGraph = new Panel();
-            this.lblTitle = new Label();
-            this.lblStart = new Label();
-            this.lblEnd = new Label();
-            this.lblSteps = new Label();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            this.cboStart = new System.Windows.Forms.ComboBox();
+            this.cboEnd = new System.Windows.Forms.ComboBox();
+            this.btnFind = new System.Windows.Forms.Button();
+            this.btnReset = new System.Windows.Forms.Button();
+            this.lstSteps = new System.Windows.Forms.ListBox();
+            this.lblResult = new System.Windows.Forms.Label();
+            this.pnlGraph = new System.Windows.Forms.Panel();
+            this.lblTitle = new System.Windows.Forms.Label();
+            this.lblStart = new System.Windows.Forms.Label();
+            this.lblEnd = new System.Windows.Forms.Label();
+            this.lblSteps = new System.Windows.Forms.Label();
             this.SuspendLayout();
-
+            // 
+            // cboStart
+            // 
+            this.cboStart.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboStart.FormattingEnabled = true;
+            this.cboStart.Location = new System.Drawing.Point(133, 70);
+            this.cboStart.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cboStart.Name = "cboStart";
+            this.cboStart.Size = new System.Drawing.Size(199, 24);
+            this.cboStart.TabIndex = 2;
+            // 
+            // cboEnd
+            // 
+            this.cboEnd.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboEnd.FormattingEnabled = true;
+            this.cboEnd.Location = new System.Drawing.Point(467, 70);
+            this.cboEnd.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cboEnd.Name = "cboEnd";
+            this.cboEnd.Size = new System.Drawing.Size(199, 24);
+            this.cboEnd.TabIndex = 4;
+            // 
+            // btnFind
+            // 
+            this.btnFind.BackColor = System.Drawing.Color.LightGreen;
+            this.btnFind.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold);
+            this.btnFind.Location = new System.Drawing.Point(693, 68);
+            this.btnFind.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnFind.Name = "btnFind";
+            this.btnFind.Size = new System.Drawing.Size(160, 37);
+            this.btnFind.TabIndex = 5;
+            this.btnFind.Text = "Tìm Đường Bay";
+            this.btnFind.UseVisualStyleBackColor = false;
+            this.btnFind.Click += new System.EventHandler(this.BtnFind_Click);
+            // 
+            // btnReset
+            // 
+            this.btnReset.BackColor = System.Drawing.Color.LightCoral;
+            this.btnReset.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold);
+            this.btnReset.Location = new System.Drawing.Point(867, 68);
+            this.btnReset.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnReset.Name = "btnReset";
+            this.btnReset.Size = new System.Drawing.Size(133, 37);
+            this.btnReset.TabIndex = 6;
+            this.btnReset.Text = "Làm Mới";
+            this.btnReset.UseVisualStyleBackColor = false;
+            this.btnReset.Click += new System.EventHandler(this.BtnReset_Click);
+            // 
+            // lstSteps
+            // 
+            this.lstSteps.Font = new System.Drawing.Font("Courier New", 9F);
+            this.lstSteps.FormattingEnabled = true;
+            this.lstSteps.ItemHeight = 17;
+            this.lstSteps.Location = new System.Drawing.Point(1067, 105);
+            this.lstSteps.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.lstSteps.Name = "lstSteps";
+            this.lstSteps.Size = new System.Drawing.Size(492, 667);
+            this.lstSteps.TabIndex = 9;
+            // 
+            // lblResult
+            // 
+            this.lblResult.BackColor = System.Drawing.Color.LightYellow;
+            this.lblResult.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblResult.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
+            this.lblResult.ForeColor = System.Drawing.Color.DarkGreen;
+            this.lblResult.Location = new System.Drawing.Point(27, 123);
+            this.lblResult.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblResult.Name = "lblResult";
+            this.lblResult.Size = new System.Drawing.Size(999, 73);
+            this.lblResult.TabIndex = 7;
+            this.lblResult.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // pnlGraph
+            // 
+            this.pnlGraph.BackColor = System.Drawing.Color.White;
+            this.pnlGraph.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pnlGraph.BackgroundImage")));
+            this.pnlGraph.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pnlGraph.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlGraph.Location = new System.Drawing.Point(27, 209);
+            this.pnlGraph.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pnlGraph.Name = "pnlGraph";
+            this.pnlGraph.Size = new System.Drawing.Size(999, 578);
+            this.pnlGraph.TabIndex = 10;
+            this.pnlGraph.Paint += new System.Windows.Forms.PaintEventHandler(this.PnlGraph_Paint);
             // 
             // lblTitle
             // 
             this.lblTitle.AutoSize = true;
-            this.lblTitle.Font = new Font("Arial", 16F, FontStyle.Bold);
-            this.lblTitle.ForeColor = Color.DarkBlue;
-            this.lblTitle.Location = new Point(20, 20);
+            this.lblTitle.Font = new System.Drawing.Font("Arial", 16F, System.Drawing.FontStyle.Bold);
+            this.lblTitle.ForeColor = System.Drawing.Color.DarkBlue;
+            this.lblTitle.Location = new System.Drawing.Point(27, 25);
+            this.lblTitle.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new Size(400, 26);
+            this.lblTitle.Size = new System.Drawing.Size(379, 32);
+            this.lblTitle.TabIndex = 0;
             this.lblTitle.Text = "TÌM CHUYẾN BAY RẺ NHẤT";
-
             // 
             // lblStart
             // 
             this.lblStart.AutoSize = true;
-            this.lblStart.Location = new Point(20, 60);
+            this.lblStart.Location = new System.Drawing.Point(27, 74);
+            this.lblStart.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblStart.Name = "lblStart";
-            this.lblStart.Size = new Size(60, 13);
+            this.lblStart.Size = new System.Drawing.Size(55, 16);
+            this.lblStart.TabIndex = 1;
             this.lblStart.Text = "Điểm đi:";
-
-            // 
-            // cboStart
-            // 
-            this.cboStart.DropDownStyle = ComboBoxStyle.DropDownList;
-            this.cboStart.FormattingEnabled = true;
-            this.cboStart.Location = new Point(100, 57);
-            this.cboStart.Name = "cboStart";
-            this.cboStart.Size = new Size(150, 21);
-
             // 
             // lblEnd
             // 
             this.lblEnd.AutoSize = true;
-            this.lblEnd.Location = new Point(270, 60);
+            this.lblEnd.Location = new System.Drawing.Point(360, 74);
+            this.lblEnd.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblEnd.Name = "lblEnd";
-            this.lblEnd.Size = new Size(70, 13);
+            this.lblEnd.Size = new System.Drawing.Size(67, 16);
+            this.lblEnd.TabIndex = 3;
             this.lblEnd.Text = "Điểm đến:";
-
-            // 
-            // cboEnd
-            // 
-            this.cboEnd.DropDownStyle = ComboBoxStyle.DropDownList;
-            this.cboEnd.FormattingEnabled = true;
-            this.cboEnd.Location = new Point(350, 57);
-            this.cboEnd.Name = "cboEnd";
-            this.cboEnd.Size = new Size(150, 21);
-
-            // 
-            // btnFind
-            // 
-            this.btnFind.BackColor = Color.LightGreen;
-            this.btnFind.Font = new Font("Arial", 9F, FontStyle.Bold);
-            this.btnFind.Location = new Point(520, 55);
-            this.btnFind.Name = "btnFind";
-            this.btnFind.Size = new Size(120, 30);
-            this.btnFind.Text = "Tìm Đường Bay";
-            this.btnFind.UseVisualStyleBackColor = false;
-            this.btnFind.Click += new EventHandler(this.BtnFind_Click);
-
-            // 
-            // btnReset
-            // 
-            this.btnReset.BackColor = Color.LightCoral;
-            this.btnReset.Font = new Font("Arial", 9F, FontStyle.Bold);
-            this.btnReset.Location = new Point(650, 55);
-            this.btnReset.Name = "btnReset";
-            this.btnReset.Size = new Size(100, 30);
-            this.btnReset.Text = "Làm Mới";
-            this.btnReset.UseVisualStyleBackColor = false;
-            this.btnReset.Click += new EventHandler(this.BtnReset_Click);
-
-            // 
-            // lblResult
-            // 
-            this.lblResult.BackColor = Color.LightYellow;
-            this.lblResult.BorderStyle = BorderStyle.FixedSingle;
-            this.lblResult.Font = new Font("Arial", 10F, FontStyle.Bold);
-            this.lblResult.ForeColor = Color.DarkGreen;
-            this.lblResult.Location = new Point(20, 100);
-            this.lblResult.Name = "lblResult";
-            this.lblResult.Size = new Size(750, 60);
-            this.lblResult.TextAlign = ContentAlignment.MiddleLeft;
-
             // 
             // lblSteps
             // 
             this.lblSteps.AutoSize = true;
-            this.lblSteps.Font = new Font("Arial", 10F, FontStyle.Bold);
-            this.lblSteps.Location = new Point(800, 60);
+            this.lblSteps.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
+            this.lblSteps.Location = new System.Drawing.Point(1067, 74);
+            this.lblSteps.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblSteps.Name = "lblSteps";
-            this.lblSteps.Size = new Size(160, 16);
+            this.lblSteps.Size = new System.Drawing.Size(173, 19);
+            this.lblSteps.TabIndex = 8;
             this.lblSteps.Text = "Các bước thực hiện:";
-
-            // 
-            // lstSteps
-            // 
-            this.lstSteps.Font = new Font("Courier New", 9F);
-            this.lstSteps.FormattingEnabled = true;
-            this.lstSteps.ItemHeight = 15;
-            this.lstSteps.Location = new Point(800, 85);
-            this.lstSteps.Name = "lstSteps";
-            this.lstSteps.Size = new Size(370, 550);
-
-            // 
-            // pnlGraph
-            // 
-            this.pnlGraph.BackColor = Color.White;
-            this.pnlGraph.BorderStyle = BorderStyle.FixedSingle;
-            this.pnlGraph.Location = new Point(20, 170);
-            this.pnlGraph.Name = "pnlGraph";
-            this.pnlGraph.Size = new Size(750, 470);
-            this.pnlGraph.Paint += new PaintEventHandler(this.PnlGraph_Paint);
-
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new SizeF(6F, 13F);
-            this.AutoScaleMode = AutoScaleMode.Font;
-            this.ClientSize = new Size(1200, 700);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(1600, 862);
             this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.lblStart);
             this.Controls.Add(this.cboStart);
@@ -174,11 +187,13 @@ namespace DijkstraFlightFinder
             this.Controls.Add(this.lblSteps);
             this.Controls.Add(this.lstSteps);
             this.Controls.Add(this.pnlGraph);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "MainForm";
-            this.StartPosition = FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Tìm Chuyến Bay Rẻ Nhất - Thuật Toán Dijkstra";
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
     }
 }
