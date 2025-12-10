@@ -17,12 +17,16 @@ namespace DijkstraFlightFinder
             graphManager = new GraphData();
             mapRenderer = new MapRenderer();
 
+            
+            LoadComboBox();
+        }
+        private void LoadComboBox()
+        {
             cboStart.Items.AddRange(graphManager.Graph.Keys.ToArray());
             cboEnd.Items.AddRange(graphManager.Graph.Keys.ToArray());
             cboStart.SelectedIndex = 0;
             cboEnd.SelectedIndex = 1;
         }
-
         private void BtnFind_Click(object sender, EventArgs e)
         {
             string start = cboStart.SelectedItem.ToString();

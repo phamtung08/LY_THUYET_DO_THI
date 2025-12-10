@@ -48,21 +48,23 @@ namespace DijkstraFlightFinder
             // cboStart
             // 
             this.cboStart.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboStart.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cboStart.FormattingEnabled = true;
             this.cboStart.Location = new System.Drawing.Point(133, 70);
             this.cboStart.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.cboStart.Name = "cboStart";
-            this.cboStart.Size = new System.Drawing.Size(199, 24);
+            this.cboStart.Size = new System.Drawing.Size(199, 28);
             this.cboStart.TabIndex = 2;
             // 
             // cboEnd
             // 
             this.cboEnd.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboEnd.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cboEnd.FormattingEnabled = true;
             this.cboEnd.Location = new System.Drawing.Point(467, 70);
             this.cboEnd.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.cboEnd.Name = "cboEnd";
-            this.cboEnd.Size = new System.Drawing.Size(199, 24);
+            this.cboEnd.Size = new System.Drawing.Size(199, 28);
             this.cboEnd.TabIndex = 4;
             // 
             // btnFind
@@ -93,13 +95,13 @@ namespace DijkstraFlightFinder
             // 
             // lstSteps
             // 
-            this.lstSteps.Font = new System.Drawing.Font("Courier New", 9F);
+            this.lstSteps.Font = new System.Drawing.Font("Arial Narrow", 11F);
             this.lstSteps.FormattingEnabled = true;
-            this.lstSteps.ItemHeight = 17;
-            this.lstSteps.Location = new System.Drawing.Point(1067, 105);
+            this.lstSteps.ItemHeight = 22;
+            this.lstSteps.Location = new System.Drawing.Point(1055, 123);
             this.lstSteps.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.lstSteps.Name = "lstSteps";
-            this.lstSteps.Size = new System.Drawing.Size(492, 667);
+            this.lstSteps.Size = new System.Drawing.Size(492, 664);
             this.lstSteps.TabIndex = 9;
             // 
             // lblResult
@@ -142,21 +144,21 @@ namespace DijkstraFlightFinder
             // 
             // lblStart
             // 
-            this.lblStart.AutoSize = true;
-            this.lblStart.Location = new System.Drawing.Point(27, 74);
+            this.lblStart.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStart.Location = new System.Drawing.Point(27, 70);
             this.lblStart.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblStart.Name = "lblStart";
-            this.lblStart.Size = new System.Drawing.Size(55, 16);
+            this.lblStart.Size = new System.Drawing.Size(98, 23);
             this.lblStart.TabIndex = 1;
             this.lblStart.Text = "Điểm đi:";
             // 
             // lblEnd
             // 
-            this.lblEnd.AutoSize = true;
-            this.lblEnd.Location = new System.Drawing.Point(360, 74);
+            this.lblEnd.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblEnd.Location = new System.Drawing.Point(361, 70);
             this.lblEnd.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblEnd.Name = "lblEnd";
-            this.lblEnd.Size = new System.Drawing.Size(67, 16);
+            this.lblEnd.Size = new System.Drawing.Size(98, 23);
             this.lblEnd.TabIndex = 3;
             this.lblEnd.Text = "Điểm đến:";
             // 
@@ -164,7 +166,7 @@ namespace DijkstraFlightFinder
             // 
             this.lblSteps.AutoSize = true;
             this.lblSteps.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
-            this.lblSteps.Location = new System.Drawing.Point(1067, 74);
+            this.lblSteps.Location = new System.Drawing.Point(1051, 100);
             this.lblSteps.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblSteps.Name = "lblSteps";
             this.lblSteps.Size = new System.Drawing.Size(173, 19);
@@ -175,7 +177,8 @@ namespace DijkstraFlightFinder
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1600, 862);
+            this.AutoSize = true;
+            this.ClientSize = new System.Drawing.Size(1283, 752);
             this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.lblStart);
             this.Controls.Add(this.cboStart);
